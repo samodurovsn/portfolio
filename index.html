@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Портфолио | Дизайнер из Тулы</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    
+    
+    <!-- Подключение AOS (Анимации при прокрутке) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">Мое Портфолио</a>
+            <nav>
+                <a href="#about">Обо мне</a>
+                <a href="#skills">Инструменты</a>
+                <a href="#portfolio">Работы</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container hero-content" data-aos="zoom-in" data-aos-duration="1000">
+            <h1>Привет, я начинающий 3D Дизайнер 🚀</h1>
+            <p>Создаю потрясающие 3D миры и модели.</p>
+            <div class="hero-badges">
+                <span>📍 Тула</span>
+                <span>🎓 Академия Rubikon</span>
+                <span>🔥 Опыт 2 года</span>
+            </div>
+            <a href="#portfolio" class="btn btn-primary">Посмотреть работы</a>
+        </div>
+    </section>
+
+    <section id="about" class="container" data-aos="fade-up">
+        <h2>Обо мне ✨</h2>
+        <div class="about-content">
+            <p>Меня зовут Савелий. Я живу в <b>Туле</b> и начал увлекаться 3D дизайном 2 года назад, когда мне было 12, сейчас мне 14. Для меня это не просто хобби, а настоящее искусство, где я могу воплощать в жизнь самые смелые идеи.</p>
+            <p>На данный момент я совершенствую свои навыки и прохожу обучение в <b>компьютерной академии Rubikon</b>. Я стремлюсь к профессиональному росту в геймдеве и создании качественного 3D-контента.</p>
+        </div>
+        <div class="about-highlights">
+            <div class="highlight-card">
+                <span class="highlight-title">Направление</span>
+                <p>Персонажи, пропсы, окружение</p>
+            </div>
+            <div class="highlight-card">
+                <span class="highlight-title">Цель</span>
+                <p>Работать в геймдев и создавать сильные визуалы</p>
+            </div>
+            <div class="highlight-card">
+                <span class="highlight-title">Фокус</span>
+                <p>Чистый пайплайн: high-poly → low-poly → baking → texture</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="container" data-aos="fade-up">
+        <h2>Мои инструменты 🛠️</h2>
+        <div class="skills-grid">
+            <div class="skill-card" data-aos="flip-left" data-aos-delay="100">Blender</div>
+            <div class="skill-card" data-aos="flip-left" data-aos-delay="200">Autodesk Maya</div>
+            <div class="skill-card" data-aos="flip-left" data-aos-delay="300">ZBrush</div>
+            <div class="skill-card" data-aos="flip-left" data-aos-delay="400">Substance Painter</div>
+            <div class="skill-card" data-aos="flip-left" data-aos-delay="500">Marmoset Toolbag</div>
+            <div class="skill-card" data-aos="flip-left" data-aos-delay="600">Roblox Studio</div>
+            <div class="skill-card" data-aos="flip-left" data-aos-delay="700">Unreal Engine 5</div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="container" data-aos="fade-up">
+        <h2>Мои работы 🎨</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/1-water/water-img.png" alt="Работа: Water" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Environment • 2026</div>
+                    <h3>Water</h3>
+                    <p>Материалы и освещение</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>LookDev</span><span>Render</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/1-water/water-model.glb" data-poster="assets/1-water/water-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/2-tree/tree-img.jpg" alt="Работа: Tree" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Environment • 2026</div>
+                    <h3>Tree</h3>
+                    <p>Природный объект и текстуры</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Substance</span><span>Render</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/2-tree/tree-model.glb" data-poster="assets/2-tree/tree-img.jpg">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/3-kinder/kinder-img.png" alt="Работа: Kinder" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Prop • 2026</div>
+                    <h3>Kinder</h3>
+                    <p>Моделинг и шейдинг</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Substance</span><span>LookDev</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/3-kinder/kinder-model.glb" data-poster="assets/3-kinder/kinder-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/4-mauser/mauser-img.png" alt="Работа: Mauser" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Weapon • 2026</div>
+                    <h3>Mauser</h3>
+                    <p>Hard Surface моделинг</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Hard Surface</span><span>Render</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/4-mauser/mauser-model.glb" data-poster="assets/4-mauser/mauser-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/5-knife/knife-img.png" alt="Работа: Knife" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Weapon • 2026</div>
+                    <h3>Knife</h3>
+                    <p>Пропс и материалы</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Substance</span><span>Marmoset</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/5-knife/knife-model.glb" data-poster="assets/5-knife/knife-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/6-sawn_off_shotgun/sawn_off_shotgun-img.png" alt="Работа: Sawn Off Shotgun" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Weapon • 2026</div>
+                    <h3>Sawn-off Shotgun</h3>
+                    <p>Hard Surface и детализация</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Substance</span><span>Game Art</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/6-sawn_off_shotgun/sawn_off_shotgun-model.glb" data-poster="assets/6-sawn_off_shotgun/sawn_off_shotgun-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/7-flamethrower/flamethrower-img.png" alt="Работа: Flamethrower" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Weapon • 2026</div>
+                    <h3>Flamethrower</h3>
+                    <p>Сложный пропс</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Hard Surface</span><span>UV</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/7-flamethrower/flamethrower-model.glb" data-poster="assets/7-flamethrower/flamethrower-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/8-gun/gun-img.png" alt="Работа: Gun" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Weapon • 2026</div>
+                    <h3>Gun</h3>
+                    <p>Игровой пропс</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Substance</span><span>Marmoset</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/8-gun/gun-model.glb" data-poster="assets/8-gun/gun-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/9-mask/mask-img.png" alt="Работа: Mask" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Character Prop • 2026</div>
+                    <h3>Mask</h3>
+                    <p>Скульпт и текстуры</p>
+                    <div class="portfolio-tags">
+                        <span>ZBrush</span><span>Substance</span><span>Render</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/9-mask/mask-model.glb" data-poster="assets/9-mask/mask-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/10-revolver/revolver-img.png" alt="Работа: Revolver" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Weapon • 2026</div>
+                    <h3>Revolver</h3>
+                    <p>Hard Surface и рендер</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Hard Surface</span><span>Marmoset</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/10-revolver/revolver-model.glb" data-poster="assets/10-revolver/revolver-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <img loading="lazy" src="assets/11-saber/saber-img.png" alt="Работа: Saber" class="portfolio-img">
+                <div class="portfolio-info">
+                    <div class="portfolio-meta">Weapon • 2026</div>
+                    <h3>Saber</h3>
+                    <p>Футуристичный пропс</p>
+                    <div class="portfolio-tags">
+                        <span>Maya</span><span>Substance</span><span>Lighting</span>
+                    </div>
+                    <button class="btn btn-secondary view-3d-btn" data-model="assets/11-saber/saber-model.glb" data-poster="assets/11-saber/saber-img.png">Смотреть в 3D</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <p>© 2026. Портфолио. Тула.</p>
+        </div>
+    </footer>
+
+    <!-- Модальное окно для 3D просмотра -->
+    <div id="modelModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="viewer-toolbar">
+                <button id="resetView" class="viewer-btn" type="button">Сброс вида</button>
+                <button id="toggleRotate" class="viewer-btn" type="button">Пауза вращения</button>
+                <button id="toggleFullscreen" class="viewer-btn" type="button">На весь экран</button>
+            </div>
+            <div id="viewerLoading" class="viewer-loading" aria-live="polite">
+                <span>Загрузка модели...</span>
+                <div class="progress-track"><div id="viewerProgress" class="progress-fill"></div></div>
+            </div>
+            <model-viewer id="viewer"
+                src=""
+                alt="3D модель"
+                camera-controls
+                touch-action="pan-y"
+                auto-rotate
+                auto-rotate-delay="0"
+                rotation-per-second="25deg"
+                interaction-prompt-threshold="0"
+                interpolation-decay="200"
+                camera-orbit="45deg 75deg auto"
+                min-camera-orbit="auto auto 5%"
+                max-camera-orbit="auto auto 200%"
+                shadow-intensity="1.5"
+                shadow-softness="1"
+                exposure="1.2"
+                tone-mapping="neutral"
+                loading="eager"
+                reveal="auto"
+                environment-image="neutral">
+            </model-viewer>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            offset: 100
+        });
+    </script>
+    <script src="script.js" defer></script>
+</body>
+</html>
