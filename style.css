@@ -481,6 +481,8 @@ button {
     content: "";
     position: absolute;
     inset: 0;
+    z-index: -1; /* above the component background, below its label/icon */
+    border-radius: inherit; /* state layer follows the morphing shape */
     background: currentColor;
     opacity: 0;
     pointer-events: none;
@@ -535,6 +537,10 @@ button {
     transition: box-shadow var(--md-sys-motion-spring-fast-effects-duration)
         var(--md-sys-motion-spring-fast-effects-easing),
         background-color var(--md-sys-motion-spring-fast-effects-duration)
+        var(--md-sys-motion-spring-fast-effects-easing),
+        border-radius var(--md-sys-motion-spring-fast-spatial-duration)
+        var(--md-sys-motion-spring-fast-spatial-easing),
+        transform var(--md-sys-motion-spring-fast-effects-duration)
         var(--md-sys-motion-spring-fast-effects-easing);
 }
 
@@ -608,6 +614,10 @@ button {
     color: var(--md-sys-color-on-surface-variant);
     cursor: pointer;
     flex: none;
+    transition: border-radius var(--md-sys-motion-spring-fast-spatial-duration)
+        var(--md-sys-motion-spring-fast-spatial-easing),
+        transform var(--md-sys-motion-spring-fast-effects-duration)
+        var(--md-sys-motion-spring-fast-effects-easing);
 }
 
 .icon-button .material-symbols-outlined {
@@ -643,6 +653,12 @@ button {
     color: var(--md-sys-color-on-surface);
     text-decoration: none;
     white-space: nowrap;
+    transition: border-radius var(--md-sys-motion-spring-fast-spatial-duration)
+        var(--md-sys-motion-spring-fast-spatial-easing),
+        background-color var(--md-sys-motion-spring-fast-effects-duration)
+        var(--md-sys-motion-spring-fast-effects-easing),
+        border-color var(--md-sys-motion-spring-fast-effects-duration)
+        var(--md-sys-motion-spring-fast-effects-easing);
 }
 
 /* Minimum 48dp touch target, extending beyond the visible container */
@@ -735,6 +751,10 @@ button {
     transition: background-color var(--md-sys-motion-spring-fast-effects-duration)
             var(--md-sys-motion-spring-fast-effects-easing),
         color var(--md-sys-motion-spring-fast-effects-duration)
+            var(--md-sys-motion-spring-fast-effects-easing),
+        border-radius var(--md-sys-motion-spring-fast-spatial-duration)
+            var(--md-sys-motion-spring-fast-spatial-easing),
+        transform var(--md-sys-motion-spring-fast-effects-duration)
             var(--md-sys-motion-spring-fast-effects-easing);
 }
 
@@ -812,6 +832,8 @@ button {
     font-size: var(--md-sys-typescale-body-large-size);
     line-height: var(--md-sys-typescale-body-large-line-height);
     letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    transition: border-radius var(--md-sys-motion-spring-fast-spatial-duration)
+        var(--md-sys-motion-spring-fast-spatial-easing);
 }
 
 .menu__item[aria-checked="true"] {
@@ -854,6 +876,60 @@ button {
     height: 1px;
     margin-block: var(--spacing-xs);
     background: var(--md-sys-color-outline-variant); /* dividers = outline variant */
+}
+
+/* ---------- Expressive shape morphing ----------
+ * Interactive controls morph through the MD3 shape scale on
+ * interaction. Rest shapes differ, but every control springs toward
+ * CornerMedium (12dp) on hover and then moves one scale step further
+ * while pressed: pills (20dp effective) collapse to CornerSmall
+ * (8dp), flat elements (chips, menu rows) swell to CornerLarge
+ * (16dp) — pills become squircles, flat rows become soft capsules.
+ * The morph is driven by the fast spatial spring (350ms,
+ * overshooting bezier); the state layer (::after inherits
+ * border-radius) morphs together with the container, and pressed
+ * buttons add a subtle press scale on the fast effects spring. */
+
+.btn:hover {
+    border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.btn:active {
+    border-radius: var(--md-sys-shape-corner-small);
+    transform: scale(0.97);
+}
+
+.icon-button:hover {
+    border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.icon-button:active {
+    border-radius: var(--md-sys-shape-corner-small);
+    transform: scale(0.97);
+}
+
+.chip:hover {
+    border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.chip:active {
+    border-radius: var(--md-sys-shape-corner-large);
+}
+
+.nav-item:hover {
+    border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.nav-item:active {
+    border-radius: var(--md-sys-shape-corner-small);
+}
+
+.menu__item:hover {
+    border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.menu__item:active {
+    border-radius: var(--md-sys-shape-corner-large);
 }
 
 /* ---------- Hero ---------- */
