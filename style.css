@@ -183,6 +183,17 @@
     --md-sys-elevation-level4: 0 2px 3px rgba(0, 0, 0, 0.30), 0 6px 10px 4px rgba(0, 0, 0, 0.15);
     --md-sys-elevation-level5: 0 4px 4px rgba(0, 0, 0, 0.30), 0 8px 12px 6px rgba(0, 0, 0, 0.15);
 
+    /* Rest radius for pill controls that morph their corners.
+       CornerFull (9999px) is unsafe as a transition start value:
+       the spatial spring overshoots ~9.5%, so interpolating
+       9999px -> 12px dips below 0px and clamps to a square flash
+       before bouncing back. On 40dp-tall controls 20dp equals the
+       half-height clamp, so this renders as an identical full pill
+       while keeping every morph interpolation inside [~7px, 20px].
+       Re-derive it (half the control height) if a pill control
+       ever grows taller than 40dp. */
+    --morph-pill-rest: var(--md-sys-shape-corner-large-increased); /* 20dp */
+
     /* --- Spacing: 8dp spacing system (web token names are my
            implementation of the 8dp guidance, not M3 tokens) --- */
     --spacing-xs: 4px;
@@ -524,7 +535,7 @@ button {
     min-height: 40px;               /* BaselineButton ContainerHeight 40dp */
     padding-inline: var(--spacing-l); /* Leading/TrailingSpace 24dp */
     border: none;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--morph-pill-rest); /* full pill, safe for spring overshoot */
     font-family: var(--md-sys-typescale-font-plain);
     font-size: var(--md-sys-typescale-label-large-size);
     line-height: var(--md-sys-typescale-label-large-line-height);
@@ -609,7 +620,7 @@ button {
     width: 40px;
     height: 40px;
     border: none;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--morph-pill-rest); /* full circle, safe for spring overshoot */
     background: transparent;
     color: var(--md-sys-color-on-surface-variant);
     cursor: pointer;
@@ -741,7 +752,7 @@ button {
     align-items: center;
     min-height: 40px;
     padding: 0 var(--spacing-m);
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--morph-pill-rest); /* full pill, safe for spring overshoot */
     color: var(--md-sys-color-on-surface-variant);
     text-decoration: none;
     font-size: var(--md-sys-typescale-label-large-size);
