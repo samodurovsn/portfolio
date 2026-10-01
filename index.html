@@ -1,280 +1,492 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-accent="orange">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FFF8F6">
     <title>3D Портфолио | Дизайнер из Тулы</title>
+
+    <!-- Apply stored theme before first paint to avoid a flash of the wrong scheme -->
+    <script>
+        (function () {
+            try {
+                var root = document.documentElement;
+                var accent = localStorage.getItem('md3-accent');
+                if (accent) root.setAttribute('data-accent', accent);
+                var mode = localStorage.getItem('md3-mode') || 'system';
+                var dark = mode === 'dark' ||
+                    (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                root.setAttribute('data-theme', dark ? 'dark' : 'light');
+            } catch (e) { /* localStorage unavailable — keep defaults */ }
+        })();
+    </script>
+
+    <!-- MD3 color tokens (generated) + full system tokens & components -->
+    <link rel="stylesheet" href="tokens.css">
     <link rel="stylesheet" href="style.css">
+
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-    
-    
-    <!-- Подключение AOS (Анимации при прокрутке) -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
+
+    <!-- Roboto Flex (MD3 default typeface) + Material Symbols -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://unpkg.com">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="container nav-container">
-            <a href="#" class="logo">Мое Портфолио</a>
-            <nav>
-                <a href="#about">Обо мне</a>
-                <a href="#skills">Инструменты</a>
-                <a href="#portfolio">Работы</a>
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+    <!-- Top app bar (small, 64dp) -->
+    <header class="top-app-bar" id="topAppBar">
+        <div class="top-app-bar__inner container">
+            <a href="#" class="brand">Мое Портфолио</a>
+
+            <nav class="top-app-bar__nav" aria-label="Основная навигация">
+                <a class="nav-item" href="#about">Обо мне</a>
+                <a class="nav-item" href="#skills">Инструменты</a>
+                <a class="nav-item" href="#portfolio">Работы</a>
             </nav>
+
+            <div class="top-app-bar__actions">
+                <!-- Quick light/dark toggle -->
+                <button class="icon-button icon-button--tonal" id="themeToggle" type="button"
+                        aria-label="Переключить тёмную тему">
+                    <span class="material-symbols-outlined" aria-hidden="true">dark_mode</span>
+                </button>
+
+                <!-- Theme & accent settings menu -->
+                <div class="menu-anchor">
+                    <button class="icon-button icon-button--tonal" id="themeMenuButton" type="button"
+                            aria-haspopup="menu" aria-expanded="false" aria-controls="themeMenu"
+                            aria-label="Настройки оформления">
+                        <span class="material-symbols-outlined" aria-hidden="true">palette</span>
+                    </button>
+
+                    <div class="menu" id="themeMenu" role="menu" aria-label="Оформление" hidden>
+                        <p class="menu__label" id="menuModeLabel">Режим</p>
+                        <button class="menu__item" role="menuitemradio" type="button" data-mode="system">
+                            <span class="material-symbols-outlined menu__icon" aria-hidden="true">brightness_auto</span>
+                            <span class="menu__text">Системная</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+                        <button class="menu__item" role="menuitemradio" type="button" data-mode="light">
+                            <span class="material-symbols-outlined menu__icon" aria-hidden="true">light_mode</span>
+                            <span class="menu__text">Светлая</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+                        <button class="menu__item" role="menuitemradio" type="button" data-mode="dark">
+                            <span class="material-symbols-outlined menu__icon" aria-hidden="true">dark_mode</span>
+                            <span class="menu__text">Тёмная</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+
+                        <div class="menu__divider" role="separator"></div>
+
+                        <p class="menu__label" id="menuAccentLabel">Акцент</p>
+                        <!-- Swatch colors are the source seeds for the generated schemes -->
+                        <button class="menu__item" role="menuitemradio" type="button" data-accent="orange">
+                            <span class="menu__swatch" style="--swatch: #C86F43" aria-hidden="true"></span>
+                            <span class="menu__text">Оранжевый</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+                        <button class="menu__item" role="menuitemradio" type="button" data-accent="purple">
+                            <span class="menu__swatch" style="--swatch: #6750A4" aria-hidden="true"></span>
+                            <span class="menu__text">Фиолетовый</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+                        <button class="menu__item" role="menuitemradio" type="button" data-accent="blue">
+                            <span class="menu__swatch" style="--swatch: #3A66B8" aria-hidden="true"></span>
+                            <span class="menu__text">Синий</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+                        <button class="menu__item" role="menuitemradio" type="button" data-accent="green">
+                            <span class="menu__swatch" style="--swatch: #3B6E48" aria-hidden="true"></span>
+                            <span class="menu__text">Зелёный</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+                        <button class="menu__item" role="menuitemradio" type="button" data-accent="rose">
+                            <span class="menu__swatch" style="--swatch: #B3476A" aria-hidden="true"></span>
+                            <span class="menu__text">Розовый</span>
+                            <span class="material-symbols-outlined menu__check" aria-hidden="true">check</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <section id="hero">
-        <div class="container hero-content" data-aos="zoom-in" data-aos-duration="1000">
-            <h1>Привет, я начинающий 3D Дизайнер 🚀</h1>
-            <p>Создаю потрясающие 3D миры и модели.</p>
-            <div class="hero-badges">
-                <span>📍 Тула</span>
-                <span>🎓 Академия Rubikon</span>
-                <span>🔥 Опыт 2 года</span>
-            </div>
-            <a href="#portfolio" class="btn btn-primary">Посмотреть работы</a>
-        </div>
-    </section>
-
-    <section id="about" class="container" data-aos="fade-up">
-        <h2>Обо мне ✨</h2>
-        <div class="about-content">
-            <p>Меня зовут Савелий. Я живу в <b>Туле</b> и начал увлекаться 3D дизайном 2 года назад, когда мне было 12, сейчас мне 14. Для меня это не просто хобби, а настоящее искусство, где я могу воплощать в жизнь самые смелые идеи.</p>
-            <p>На данный момент я совершенствую свои навыки и прохожу обучение в <b>компьютерной академии Rubikon</b>. Я стремлюсь к профессиональному росту в геймдеве и создании качественного 3D-контента.</p>
-        </div>
-        <div class="about-highlights">
-            <div class="highlight-card">
-                <span class="highlight-title">Направление</span>
-                <p>Персонажи, пропсы, окружение</p>
-            </div>
-            <div class="highlight-card">
-                <span class="highlight-title">Цель</span>
-                <p>Работать в геймдев и создавать сильные визуалы</p>
-            </div>
-            <div class="highlight-card">
-                <span class="highlight-title">Фокус</span>
-                <p>Чистый пайплайн: high-poly → low-poly → baking → texture</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="container" data-aos="fade-up">
-        <h2>Мои инструменты 🛠️</h2>
-        <div class="skills-grid">
-            <div class="skill-card" data-aos="flip-left" data-aos-delay="100">Blender</div>
-            <div class="skill-card" data-aos="flip-left" data-aos-delay="200">Autodesk Maya</div>
-            <div class="skill-card" data-aos="flip-left" data-aos-delay="300">ZBrush</div>
-            <div class="skill-card" data-aos="flip-left" data-aos-delay="400">Substance Painter</div>
-            <div class="skill-card" data-aos="flip-left" data-aos-delay="500">Marmoset Toolbag</div>
-            <div class="skill-card" data-aos="flip-left" data-aos-delay="600">Roblox Studio</div>
-            <div class="skill-card" data-aos="flip-left" data-aos-delay="700">Unreal Engine 5</div>
-        </div>
-    </section>
-
-    <section id="portfolio" class="container" data-aos="fade-up">
-        <h2>Мои работы 🎨</h2>
-        <div class="portfolio-grid">
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/1-water/water-img.png" alt="Работа: Water" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Environment • 2026</div>
-                    <h3>Water</h3>
-                    <p>Материалы и освещение</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>LookDev</span><span>Render</span>
-                    </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/1-water/water-model.glb" data-poster="assets/1-water/water-img.png">Смотреть в 3D</button>
+    <main id="main">
+        <!-- Hero -->
+        <section id="hero">
+            <div class="container hero-content reveal">
+                <div class="hero-badges" aria-label="Кратко обо мне">
+                    <span class="chip chip--assist">
+                        <span class="material-symbols-outlined chip__icon" aria-hidden="true">location_on</span>
+                        Тула
+                    </span>
+                    <span class="chip chip--assist">
+                        <span class="material-symbols-outlined chip__icon" aria-hidden="true">school</span>
+                        Академия Rubikon
+                    </span>
+                    <span class="chip chip--assist">
+                        <span class="material-symbols-outlined chip__icon" aria-hidden="true">local_fire_department</span>
+                        Опыт 2 года
+                    </span>
+                </div>
+                <h1 class="type-display-l is-emph">Привет, я начинающий 3D Дизайнер 🚀</h1>
+                <p class="hero-subtitle type-body-l">Создаю потрясающие 3D миры и модели.</p>
+                <div class="hero-actions">
+                    <a href="#portfolio" class="btn btn--filled is-emph">
+                        <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                        Посмотреть работы
+                    </a>
+                    <a href="#about" class="btn btn--outlined">Обо мне</a>
                 </div>
             </div>
+        </section>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/2-tree/tree-img.jpg" alt="Работа: Tree" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Environment • 2026</div>
-                    <h3>Tree</h3>
-                    <p>Природный объект и текстуры</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Substance</span><span>Render</span>
-                    </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/2-tree/tree-model.glb" data-poster="assets/2-tree/tree-img.jpg">Смотреть в 3D</button>
+        <!-- About -->
+        <section id="about" class="section container reveal">
+            <h2 class="section__title type-headline-m is-emph">Обо мне ✨</h2>
+            <div class="about-content">
+                <p class="type-body-l">Меня зовут Савелий. Я живу в <b>Туле</b> и начал увлекаться 3D дизайном 2 года назад, когда мне было 12, сейчас мне 14. Для меня это не просто хобби, а настоящее искусство, где я могу воплощать в жизнь самые смелые идеи.</p>
+                <p class="type-body-l">На данный момент я совершенствую свои навыки и прохожу обучение в <b>компьютерной академии Rubikon</b>. Я стремлюсь к профессиональному росту в геймдеве и создании качественного 3D-контента.</p>
+            </div>
+            <div class="about-highlights">
+                <div class="card card--filled highlight-card">
+                    <span class="highlight-card__kicker type-label-l is-emph">Направление</span>
+                    <p class="type-body-m">Персонажи, пропсы, окружение</p>
+                </div>
+                <div class="card card--filled highlight-card">
+                    <span class="highlight-card__kicker type-label-l is-emph">Цель</span>
+                    <p class="type-body-m">Работать в геймдев и создавать сильные визуалы</p>
+                </div>
+                <div class="card card--filled highlight-card">
+                    <span class="highlight-card__kicker type-label-l is-emph">Фокус</span>
+                    <p class="type-body-m">Чистый пайплайн: high-poly → low-poly → baking → texture</p>
                 </div>
             </div>
+        </section>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/3-kinder/kinder-img.png" alt="Работа: Kinder" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Prop • 2026</div>
-                    <h3>Kinder</h3>
-                    <p>Моделинг и шейдинг</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Substance</span><span>LookDev</span>
-                    </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/3-kinder/kinder-model.glb" data-poster="assets/3-kinder/kinder-img.png">Смотреть в 3D</button>
-                </div>
+        <!-- Skills -->
+        <section id="skills" class="section container reveal">
+            <h2 class="section__title type-headline-m is-emph">Мои инструменты 🛠️</h2>
+            <div class="skills-grid">
+                <span class="chip chip--tonal">Blender</span>
+                <span class="chip chip--tonal">Autodesk Maya</span>
+                <span class="chip chip--tonal">ZBrush</span>
+                <span class="chip chip--tonal">Substance Painter</span>
+                <span class="chip chip--tonal">Marmoset Toolbag</span>
+                <span class="chip chip--tonal">Roblox Studio</span>
+                <span class="chip chip--tonal">Unreal Engine 5</span>
             </div>
+        </section>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/4-mauser/mauser-img.png" alt="Работа: Mauser" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Weapon • 2026</div>
-                    <h3>Mauser</h3>
-                    <p>Hard Surface моделинг</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Hard Surface</span><span>Render</span>
+        <!-- Portfolio -->
+        <section id="portfolio" class="section container">
+            <h2 class="section__title type-headline-m is-emph reveal">Мои работы 🎨</h2>
+            <div class="portfolio-grid">
+
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/1-water/water-img.png" alt="Работа: Water" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Environment • 2026</div>
+                        <h3 class="type-title-m is-emph">Water</h3>
+                        <p class="type-body-m">Материалы и освещение</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">LookDev</span>
+                            <span class="chip chip--tag">Render</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/1-water/water-model.glb"
+                                data-poster="assets/1-water/water-img.png"
+                                data-title="Water">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/4-mauser/mauser-model.glb" data-poster="assets/4-mauser/mauser-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
+                </article>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/5-knife/knife-img.png" alt="Работа: Knife" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Weapon • 2026</div>
-                    <h3>Knife</h3>
-                    <p>Пропс и материалы</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Substance</span><span>Marmoset</span>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/2-tree/tree-img.jpg" alt="Работа: Tree" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Environment • 2026</div>
+                        <h3 class="type-title-m is-emph">Tree</h3>
+                        <p class="type-body-m">Природный объект и текстуры</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Substance</span>
+                            <span class="chip chip--tag">Render</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/2-tree/tree-model.glb"
+                                data-poster="assets/2-tree/tree-img.jpg"
+                                data-title="Tree">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/5-knife/knife-model.glb" data-poster="assets/5-knife/knife-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
+                </article>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/6-sawn_off_shotgun/sawn_off_shotgun-img.png" alt="Работа: Sawn Off Shotgun" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Weapon • 2026</div>
-                    <h3>Sawn-off Shotgun</h3>
-                    <p>Hard Surface и детализация</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Substance</span><span>Game Art</span>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/3-kinder/kinder-img.png" alt="Работа: Kinder" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Prop • 2026</div>
+                        <h3 class="type-title-m is-emph">Kinder</h3>
+                        <p class="type-body-m">Моделинг и шейдинг</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Substance</span>
+                            <span class="chip chip--tag">LookDev</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/3-kinder/kinder-model.glb"
+                                data-poster="assets/3-kinder/kinder-img.png"
+                                data-title="Kinder">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/6-sawn_off_shotgun/sawn_off_shotgun-model.glb" data-poster="assets/6-sawn_off_shotgun/sawn_off_shotgun-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
+                </article>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/7-flamethrower/flamethrower-img.png" alt="Работа: Flamethrower" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Weapon • 2026</div>
-                    <h3>Flamethrower</h3>
-                    <p>Сложный пропс</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Hard Surface</span><span>UV</span>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/4-mauser/mauser-img.png" alt="Работа: Mauser" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Weapon • 2026</div>
+                        <h3 class="type-title-m is-emph">Mauser</h3>
+                        <p class="type-body-m">Hard Surface моделинг</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Hard Surface</span>
+                            <span class="chip chip--tag">Render</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/4-mauser/mauser-model.glb"
+                                data-poster="assets/4-mauser/mauser-img.png"
+                                data-title="Mauser">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/7-flamethrower/flamethrower-model.glb" data-poster="assets/7-flamethrower/flamethrower-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
+                </article>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/8-gun/gun-img.png" alt="Работа: Gun" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Weapon • 2026</div>
-                    <h3>Gun</h3>
-                    <p>Игровой пропс</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Substance</span><span>Marmoset</span>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/5-knife/knife-img.png" alt="Работа: Knife" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Weapon • 2026</div>
+                        <h3 class="type-title-m is-emph">Knife</h3>
+                        <p class="type-body-m">Пропс и материалы</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Substance</span>
+                            <span class="chip chip--tag">Marmoset</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/5-knife/knife-model.glb"
+                                data-poster="assets/5-knife/knife-img.png"
+                                data-title="Knife">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/8-gun/gun-model.glb" data-poster="assets/8-gun/gun-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
+                </article>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/9-mask/mask-img.png" alt="Работа: Mask" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Character Prop • 2026</div>
-                    <h3>Mask</h3>
-                    <p>Скульпт и текстуры</p>
-                    <div class="portfolio-tags">
-                        <span>ZBrush</span><span>Substance</span><span>Render</span>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/6-sawn_off_shotgun/sawn_off_shotgun-img.png" alt="Работа: Sawn Off Shotgun" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Weapon • 2026</div>
+                        <h3 class="type-title-m is-emph">Sawn-off Shotgun</h3>
+                        <p class="type-body-m">Hard Surface и детализация</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Substance</span>
+                            <span class="chip chip--tag">Game Art</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/6-sawn_off_shotgun/sawn_off_shotgun-model.glb"
+                                data-poster="assets/6-sawn_off_shotgun/sawn_off_shotgun-img.png"
+                                data-title="Sawn-off Shotgun">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/9-mask/mask-model.glb" data-poster="assets/9-mask/mask-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
+                </article>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/10-revolver/revolver-img.png" alt="Работа: Revolver" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Weapon • 2026</div>
-                    <h3>Revolver</h3>
-                    <p>Hard Surface и рендер</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Hard Surface</span><span>Marmoset</span>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/7-flamethrower/flamethrower-img.png" alt="Работа: Flamethrower" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Weapon • 2026</div>
+                        <h3 class="type-title-m is-emph">Flamethrower</h3>
+                        <p class="type-body-m">Сложный пропс</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Hard Surface</span>
+                            <span class="chip chip--tag">UV</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/7-flamethrower/flamethrower-model.glb"
+                                data-poster="assets/7-flamethrower/flamethrower-img.png"
+                                data-title="Flamethrower">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/10-revolver/revolver-model.glb" data-poster="assets/10-revolver/revolver-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
+                </article>
 
-            <div class="portfolio-item">
-                <img loading="lazy" src="assets/11-saber/saber-img.png" alt="Работа: Saber" class="portfolio-img">
-                <div class="portfolio-info">
-                    <div class="portfolio-meta">Weapon • 2026</div>
-                    <h3>Saber</h3>
-                    <p>Футуристичный пропс</p>
-                    <div class="portfolio-tags">
-                        <span>Maya</span><span>Substance</span><span>Lighting</span>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/8-gun/gun-img.png" alt="Работа: Gun" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Weapon • 2026</div>
+                        <h3 class="type-title-m is-emph">Gun</h3>
+                        <p class="type-body-m">Игровой пропс</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Substance</span>
+                            <span class="chip chip--tag">Marmoset</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/8-gun/gun-model.glb"
+                                data-poster="assets/8-gun/gun-img.png"
+                                data-title="Gun">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
                     </div>
-                    <button class="btn btn-secondary view-3d-btn" data-model="assets/11-saber/saber-model.glb" data-poster="assets/11-saber/saber-img.png">Смотреть в 3D</button>
-                </div>
-            </div>
-        </div>
-    </section>
+                </article>
 
-    <footer>
-        <div class="container footer-content">
-            <p>© 2026. Портфолио. Тула.</p>
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/9-mask/mask-img.png" alt="Работа: Mask" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Character Prop • 2026</div>
+                        <h3 class="type-title-m is-emph">Mask</h3>
+                        <p class="type-body-m">Скульпт и текстуры</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">ZBrush</span>
+                            <span class="chip chip--tag">Substance</span>
+                            <span class="chip chip--tag">Render</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/9-mask/mask-model.glb"
+                                data-poster="assets/9-mask/mask-img.png"
+                                data-title="Mask">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
+                    </div>
+                </article>
+
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/10-revolver/revolver-img.png" alt="Работа: Revolver" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Weapon • 2026</div>
+                        <h3 class="type-title-m is-emph">Revolver</h3>
+                        <p class="type-body-m">Hard Surface и рендер</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Hard Surface</span>
+                            <span class="chip chip--tag">Marmoset</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/10-revolver/revolver-model.glb"
+                                data-poster="assets/10-revolver/revolver-img.png"
+                                data-title="Revolver">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
+                    </div>
+                </article>
+
+                <article class="card card--filled portfolio-item reveal">
+                    <img loading="lazy" src="assets/11-saber/saber-img.png" alt="Работа: Saber" class="portfolio-item__img">
+                    <div class="portfolio-item__info">
+                        <div class="portfolio-item__meta type-label-s">Weapon • 2026</div>
+                        <h3 class="type-title-m is-emph">Saber</h3>
+                        <p class="type-body-m">Футуристичный пропс</p>
+                        <div class="portfolio-item__tags">
+                            <span class="chip chip--tag">Maya</span>
+                            <span class="chip chip--tag">Substance</span>
+                            <span class="chip chip--tag">Lighting</span>
+                        </div>
+                        <button class="btn btn--tonal view-3d-btn" type="button"
+                                data-model="assets/11-saber/saber-model.glb"
+                                data-poster="assets/11-saber/saber-img.png"
+                                data-title="Saber">
+                            <span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span>
+                            Смотреть в 3D
+                        </button>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="type-body-m">© 2026. Портфолио. Тула.</p>
         </div>
     </footer>
 
-    <!-- Модальное окно для 3D просмотра -->
-    <div id="modelModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <div class="viewer-toolbar">
-                <button id="resetView" class="viewer-btn" type="button">Сброс вида</button>
-                <button id="toggleRotate" class="viewer-btn" type="button">Пауза вращения</button>
-                <button id="toggleFullscreen" class="viewer-btn" type="button">На весь экран</button>
+    <!-- 3D viewer: basic dialog on desktop, full-screen dialog on compact -->
+    <div id="modelModal" class="viewer" role="dialog" aria-modal="true" aria-labelledby="viewerTitle" hidden>
+        <div class="viewer__panel">
+            <header class="viewer__header">
+                <div class="viewer__header-row">
+                    <h2 class="viewer__title type-title-l" id="viewerTitle">3D модель</h2>
+                    <button class="icon-button icon-button--filled" id="viewerClose" type="button" aria-label="Закрыть просмотр">
+                        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                    </button>
+                </div>
+                <div class="viewer__toolbar" role="toolbar" aria-label="Управление просмотром">
+                    <button id="resetView" class="btn btn--tonal" type="button">
+                        <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+                        Сброс вида
+                    </button>
+                    <button id="toggleRotate" class="btn btn--tonal" type="button">
+                        <span class="material-symbols-outlined" id="rotateIcon" aria-hidden="true">pause</span>
+                        <span id="rotateLabel">Пауза вращения</span>
+                    </button>
+                    <button id="toggleFullscreen" class="btn btn--tonal" type="button">
+                        <span class="material-symbols-outlined" aria-hidden="true">fullscreen</span>
+                        На весь экран
+                    </button>
+                </div>
+                <div class="viewer__progress" role="progressbar" aria-label="Загрузка модели" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div id="viewerProgress" class="viewer__progress-fill"></div>
+                </div>
+            </header>
+
+            <div class="viewer__stage">
+                <div id="viewerLoading" class="viewer__loading" aria-live="polite">
+                    <span class="viewer__spinner" aria-hidden="true"></span>
+                    <span class="type-body-m">Загрузка модели...</span>
+                </div>
+                <model-viewer id="viewer"
+                    src=""
+                    alt="3D модель"
+                    camera-controls
+                    touch-action="pan-y"
+                    auto-rotate
+                    auto-rotate-delay="0"
+                    rotation-per-second="25deg"
+                    interaction-prompt-threshold="0"
+                    interpolation-decay="200"
+                    camera-orbit="45deg 75deg auto"
+                    min-camera-orbit="auto auto 5%"
+                    max-camera-orbit="auto auto 200%"
+                    shadow-intensity="1.5"
+                    shadow-softness="1"
+                    exposure="1.2"
+                    tone-mapping="neutral"
+                    loading="eager"
+                    reveal="auto"
+                    environment-image="neutral">
+                </model-viewer>
             </div>
-            <div id="viewerLoading" class="viewer-loading" aria-live="polite">
-                <span>Загрузка модели...</span>
-                <div class="progress-track"><div id="viewerProgress" class="progress-fill"></div></div>
-            </div>
-            <model-viewer id="viewer"
-                src=""
-                alt="3D модель"
-                camera-controls
-                touch-action="pan-y"
-                auto-rotate
-                auto-rotate-delay="0"
-                rotation-per-second="25deg"
-                interaction-prompt-threshold="0"
-                interpolation-decay="200"
-                camera-orbit="45deg 75deg auto"
-                min-camera-orbit="auto auto 5%"
-                max-camera-orbit="auto auto 200%"
-                shadow-intensity="1.5"
-                shadow-softness="1"
-                exposure="1.2"
-                tone-mapping="neutral"
-                loading="eager"
-                reveal="auto"
-                environment-image="neutral">
-            </model-viewer>
         </div>
     </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            once: true,
-            offset: 100
-        });
-    </script>
     <script src="script.js" defer></script>
 </body>
 </html>
