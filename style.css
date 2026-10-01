@@ -879,16 +879,19 @@ button {
 }
 
 /* ---------- Expressive shape morphing ----------
- * Interactive controls morph through the MD3 shape scale on
- * interaction. Rest shapes differ, but every control springs toward
- * CornerMedium (12dp) on hover and then moves one scale step further
- * while pressed: pills (20dp effective) collapse to CornerSmall
- * (8dp), flat elements (chips, menu rows) swell to CornerLarge
- * (16dp) — pills become squircles, flat rows become soft capsules.
- * The morph is driven by the fast spatial spring (350ms,
- * overshooting bezier); the state layer (::after inherits
- * border-radius) morphs together with the container, and pressed
- * buttons add a subtle press scale on the fast effects spring. */
+ * From M3 (buttons.md / component-tokens.md):
+ *   - "pressed buttons can morph to become more square"; for
+ *     ButtonSmall (40dp) PressedContainerShape = CornerSmall (8dp),
+ *     chips PressedShape = CornerSmall (8dp)
+ *   - corner-radius changes run on the spatial spring (overshoot);
+ *     morph defaults to the expressive motion scheme (motion.md)
+ * My design decision (not in M3): hovering a control springs it to
+ * CornerMedium (12dp) — M3 defines hover only as an 8% state layer
+ * (+ level1 elevation for filled buttons), and the menu/nav-item
+ * press morphs reuse the same square-up language as buttons.
+ * The state layer (::after) inherits border-radius and morphs
+ * together with the container; pressed buttons/icons add a 0.97
+ * press scale on the fast effects spring. */
 
 .btn:hover {
     border-radius: var(--md-sys-shape-corner-medium);
@@ -913,7 +916,7 @@ button {
 }
 
 .chip:active {
-    border-radius: var(--md-sys-shape-corner-large);
+    border-radius: var(--md-sys-shape-corner-small);
 }
 
 .nav-item:hover {
@@ -929,7 +932,7 @@ button {
 }
 
 .menu__item:active {
-    border-radius: var(--md-sys-shape-corner-large);
+    border-radius: var(--md-sys-shape-corner-small);
 }
 
 /* ---------- Hero ---------- */
